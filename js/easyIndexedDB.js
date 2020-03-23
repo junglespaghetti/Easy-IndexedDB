@@ -70,9 +70,10 @@ function startMain(name, version, data) {
       });
     }
     let easyDB = new EasyIndexedDB(dbName, eDB);
-    easyDB.getDBdata(function(db) {
+    easyDB.getDBdata((db) => {
       alert(JSON.stringfy(db));
     }, dbName);
+    alert(easyDB.name);
     let db = easyDB.iniEasyDB();
   });
   //alert(easyDB.name);
