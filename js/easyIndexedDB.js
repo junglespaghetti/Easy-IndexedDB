@@ -4,38 +4,66 @@ class EasyIndexedDB {
     this.db = db;
   }
 
-  getDBdata(callback,dbName){
+  getDBdata(callback, dbName) {
     this.db.dbList
-        .where("name")
-        .equalsIgnoreCase(dbName)
-        .toArray()
-        .then(function(arr) {
-        if(arr.length == 0){
+      .where("name")
+      .equalsIgnoreCase(dbName)
+      .toArray()
+      .then(function(arr) {
+        if (arr.length == 0) {
           callback(false);
-        }else{
+        } else {
           callback(arr[0]);
         }
-    });
+      });
   }
-  isInDB(callback,db, table, field) {
-      this.db.dbList
-        .where("name")
-        .equalsIgnoreCase(db)
-        .toArray()
-        .then(function(arr) {
-        if(arr.length == 0){
+
+  getDBList(callback) {
+    this.db.dbList
+      .toArray()
+      .then(function(arr) {
+        if (arr.length == 0) {
           callback(false);
-        }else if(table){
+        } else {
+          callback(arr);
+        }
+      });
+  }
+  
+  getTableList(callback, dbName) {
+    this.db.dbList
+      .where("name")
+      .equalsIgnoreCase(dbName)
+      .toArray()
+      .then(function(arr) {
+        if (arr.length == 0) {
+          callback(false);
+        } else {
+          callback(JSON.parse(arr[0]["table"]));
+        }
+      });
+  }
+
+
+  isInDB(callback, db, table, field) {
+    this.db.dbList
+      .where("name")
+      .equalsIgnoreCase(db)
+      .toArray()
+      .then(function(arr) {
+        if (arr.length == 0) {
+          callback(false);
+        } else if (table) {
           let fields = JSON.parse(arr[0]["table"]);
           if (field && fields.includes(field)) {
             callback(field);
           } else {
             callback(table);
           }
-        }else{
+        } else {
           callback(db);
         }
-        });
+      });
   }
 
   dbList(callback) {
@@ -74,7 +102,9 @@ function startMain(name, version, data) {
       });
     }
     let easyDB = new EasyIndexedDB(dbName, eDB);
-    easyDB.isInDB(function(db){alert(db)},dbName);
+    easyDB.isInDB(function(db) {
+      alert(db);
+    }, dbName);
     let db = easyDB.getDB();
   });
   //alert(easyDB.name);
