@@ -1,30 +1,7 @@
-class easyIndexedDB {
-  constructor(name, version, tableData,Dexie) {
+class EasyIndexedDB {
+  constructor(name, db) {
     this.name = name || "easyIndexedDB";
-    this.version = version || 1;
-    this.Dexie = Dexie;
-    this.tableData = tableData || {
-      dbList: "++id, name, version, table ",
-      settings: "name, value",
-      file: "fileName,type"
-    };
-    this.eDB;
-    this.db = (
-      //Dexie.exists(this.name).then(function(exists) {
-        this.eDB = new this.Dexie(this.name);
-        console.log(this.tableData);
-        alert(this.tableData);
-        this.eDB.version(this.version).stores(this.tableData);
-        //if (!exists) {
-          this.eDB.dbList.put({
-            name: this.name,
-            version: this.version,
-            table: JSON.stringify(this.tabelData)
-          });
-        //}
-        return this.eDB;
-      //})
-    )()
+    this.db = db;
   }
 
   getDB() {
@@ -32,10 +9,26 @@ class easyIndexedDB {
   }
 }
 
-function startMain(easyIndexedDBname) {
-  let easyDB = new easyIndexedDB("test",,Dexis);
+function startMain() {
+  let easyIndexedDBname = "easyDB";
+  Dexie.exists(easyIndexedDBname).then(function(exists) {
+    var eDB = new Dexie("easyIndexedDB");
+    let tableData = {
+      dbList: "++id, name, version, table ",
+      settings: "name, value"
+    };
+    eDB.version(1).stores(tableData);
+    if (!exists) {
+      eDB.dbList.put({
+        name: easyIndexedDBname,
+        version: 1,
+        table: JSON.stringify(tableData)
+      });
+    }
+  let easyDB = new EasyIndexedDB(easyIndexedDBname, eDB);
   let db = easyDB.getDB();
   db();
+  });
   //alert(easyDB.name);
 }
 
