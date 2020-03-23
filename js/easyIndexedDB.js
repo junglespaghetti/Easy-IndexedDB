@@ -28,7 +28,7 @@ class easyIndexedDB {
 
 function startMain(easyIndexedDBname) {
   let easyDB = new easyIndexedDB("test");
-  let easyDB.initDB();
+  let db = easyDB.initDB();
   alert(easyDB.name);
 }
 
