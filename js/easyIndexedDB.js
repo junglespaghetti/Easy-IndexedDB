@@ -62,6 +62,7 @@ function startMain(name, version, data) {
       });
     }
     let easyDB = new EasyIndexedDB(dbName, eDB);
+    alert(easyDB.isInDB(dbName));
     let db = easyDB.getDB();
     db();
   });
