@@ -1,9 +1,9 @@
 javascript: (function(f, urls,cssUlrs, i, s,c) {
   urls = [
-    "https://easy-indexeddb.glitch.me/js/easyIndexedDB.js",
     "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/dexie/2.0.4/dexie.min.js",
-    "https://cdn.jsdelivr.net/npm/jspanel4@4.9.4/dist/jspanel.js"
+    "https://cdn.jsdelivr.net/npm/jspanel4@4.9.4/dist/jspanel.js",
+     "https://easy-indexeddb.glitch.me/js/easyIndexedDB.js"
   ];
   cssUlrs = [
     "https://use.fontawesome.com/releases/v5.6.3/css/all.css",
