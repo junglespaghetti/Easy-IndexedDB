@@ -2,6 +2,11 @@ class EasyIndexedDB {
   constructor(name, db) {
     this.name = name || "easyIndexedDB";
     this.db = db;
+    this.dataBase;
+  }
+  
+  iniEasyDB(){
+    this.dataBase = new Dexie('dbName');
   }
 
   getDBdata(callback, dbName) {
