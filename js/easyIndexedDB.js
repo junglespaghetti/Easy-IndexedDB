@@ -4,6 +4,19 @@ class EasyIndexedDB {
     this.db = db;
   }
 
+  getDBdata(callback,dbName){
+    this.db.dbList
+        .where("name")
+        .equalsIgnoreCase(dbName)
+        .toArray()
+        .then(function(arr) {
+        if(arr.length == 0){
+          callback(false);
+        }else{
+          callback(arr[0]);
+        }
+    });
+  }
   isInDB(callback,db, table, field) {
       this.db.dbList
         .where("name")
@@ -63,7 +76,6 @@ function startMain(name, version, data) {
     let easyDB = new EasyIndexedDB(dbName, eDB);
     easyDB.isInDB(function(db){alert(db)},dbName);
     let db = easyDB.getDB();
-    db();
   });
   //alert(easyDB.name);
 }
