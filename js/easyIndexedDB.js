@@ -7,29 +7,32 @@ class easyIndexedDB {
       settings: "name, value",
       file: "fileName,type"
     };
-    this.db = this.initDB();
+    this.db = function() {
+      Dexie.exists(this.name).then(function(exists) {
+        let eDB = new Dexie(this.name);
+        console.log(this.tableData);
+        alert(this.tableData);
+        eDB.version(this.version).stores(this.tableData);
+        if (!exists) {
+          eDB.dbList.put({
+            name: this.name,
+            version: this.version,
+            table: JSON.stringify(this.tabelData)
+          });
+        }
+        return eDB;
+      });
+    };
   }
 
-  initDB() {
-    Dexie.exists(this.name).then(function(exists) {
-      let eDB = new Dexie(this.name);
-      console.log(this.tableData);
-      eDB.version(this.version).stores(this.tableData);
-      if (!exists) {
-        eDB.dbList.put({
-          name: this.name,
-          version: this.version,
-          table: JSON.stringify(this.tabelData)
-        });
-      }
-      return eDB;
-    });
+  getDB() {
+    return this.db;
   }
 }
 
 function startMain(easyIndexedDBname) {
   let easyDB = new easyIndexedDB("test");
-  let db = easyDB.initDB();
+  //let db = easyDB.getDB();
   alert(easyDB.name);
 }
 
