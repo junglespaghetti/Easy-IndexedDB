@@ -8,20 +8,20 @@ class easyIndexedDB {
       file: "fileName,type"
     };
     this.db = (
-      Dexie.exists(this.name).then(function(exists) {
+      //Dexie.exists(this.name).then(function(exists) {
         let eDB = new Dexie(this.name);
         console.log(this.tableData);
         alert(this.tableData);
         eDB.version(this.version).stores(this.tableData);
-        if (!exists) {
+        //if (!exists) {
           eDB.dbList.put({
             name: this.name,
             version: this.version,
             table: JSON.stringify(this.tabelData)
           });
-        }
+        //}
         return eDB;
-      })
+      //})
     )()
   }
 
