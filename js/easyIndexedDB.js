@@ -49,43 +49,6 @@ class EasyIndexedDB {
       });
   }
 
-
-  isInDB(callback, db, table, field) {
-    this.db.dbList
-      .where("name")
-      .equalsIgnoreCase(db)
-      .toArray()
-      .then(function(arr) {
-        if (arr.length == 0) {
-          callback(false);
-        } else if (table) {
-          let fields = JSON.parse(arr[0]["table"]);
-          if (field && fields.includes(field)) {
-            callback(field);
-          } else {
-            callback(table);
-          }
-        } else {
-          callback(db);
-        }
-      });
-  }
-
-  dbList(callback) {
-    this.db.dbList.toArray().then(function(data) {
-      callback(data);
-    });
-  }
-
-  tableData(name, callback) {
-    this.db.dbList
-      .where("name")
-      .equalsIgnoreCase(name)
-      .toArray()
-      .then(function(arr) {
-        callback(arr);
-      });
-  }
 }
 
 function startMain(name, version, data) {
@@ -107,10 +70,10 @@ function startMain(name, version, data) {
       });
     }
     let easyDB = new EasyIndexedDB(dbName, eDB);
-    easyDB.isInDB(function(db) {
-      alert(db);
+    easyDB.getDBdata(function(db) {
+      alert(JSON.stringfy(db);
     }, dbName);
-    let db = easyDB.getDB();
+    let db = easyDB.iniEasyDB();
   });
   //alert(easyDB.name);
 }
