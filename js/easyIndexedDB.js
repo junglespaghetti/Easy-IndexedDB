@@ -7,22 +7,22 @@ class EasyIndexedDB {
   isInDB(db, table, field) {
     if (!this[db]) {
       return false;
-    } else if (!this.db[db].where("name").equalsIgnoreCase(table)) {
+    } else if (!table && !this.db[db].where("name").equalsIgnoreCase(table)) {
       return db;
-    } else if (
-      !this.db.dbList
-        .where("name")
-        .equalsIgnoreCase(table)
-        .toArray()
-    ) {
-      return table;
-    }else{
+    } else if (field) {
       this.db.dbList
         .where("name")
         .equalsIgnoreCase(table)
-        .toArray().then(function(att){
-        
-      });
+        .toArray()
+        .then(function(arr) {
+          if (arr.includes(field)) {
+            return field;
+          } else {
+            return table;
+          }
+        });
+    } else {
+      return table;
     }
   }
 
