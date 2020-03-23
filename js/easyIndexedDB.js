@@ -71,7 +71,7 @@ function startMain(name, version, data) {
     }
     let easyDB = new EasyIndexedDB(dbName, eDB);
     easyDB.getDBdata(function(db) {
-      alert(JSON.stringfy(db);
+      alert(JSON.stringfy(db));
     }, dbName);
     let db = easyDB.iniEasyDB();
   });
