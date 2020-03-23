@@ -7,7 +7,7 @@ class easyIndexedDB {
       settings: "name, value",
       file: "fileName,type"
     };
-    this.db = function() {
+    this.db = (
       Dexie.exists(this.name).then(function(exists) {
         let eDB = new Dexie(this.name);
         console.log(this.tableData);
@@ -21,8 +21,8 @@ class easyIndexedDB {
           });
         }
         return eDB;
-      });
-    };
+      })
+    )()
   }
 
   getDB() {
