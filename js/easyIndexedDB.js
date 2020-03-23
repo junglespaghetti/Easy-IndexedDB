@@ -1,27 +1,39 @@
 class easyIndexedDB {
-  constructor(name,version,tableData) {
+  constructor(name, version, tableData) {
     this.name = name || "easyIndexedDB";
     this.version = version || 1;
-    this.tableData = tableData || {dbList: "++id, name, version, table ",settings: "name, value",file:"fileName,type"};
-  }
-  
-  set name(name){
-    this.name = name;
-  }
-  
-  get name(){
-    return this.name;
+    this.tableData = tableData || {
+      dbList: "++id, name, version, table ",
+      settings: "name, value",
+      file: "fileName,type"
+    };
+    this.db = this.initDB();
   }
 
+  initDB() {
+    Dexie.exists(this.name).then(function(exists) {
+      let eDB = new Dexie(this.name);
+      eDB.version(this.version).stores(this.tableData);
+      if (!exists) {
+        eDB.dbList.put({
+          name: this.name,
+          version: this.version,
+          table: JSON.stringify(this.tabelData)
+        });
+      }
+      return eDB;
+    });
   }
+}
 
 function startMain(easyIndexedDBname) {
   let easyDB = new easyIndexedDB("test");
+  let easyDB.initDB();
   alert(easyDB.name);
 }
 
-function getMainPage(){
-return '<div id="easyIndexedDB-contents" style="margin:4px;pedding:4px;font-size: small;">\
+function getMainPage() {
+  return '<div id="easyIndexedDB-contents" style="margin:4px;pedding:4px;font-size: small;">\
     <style>#easyIndexedDB-contents p{ margin:5px;}</style>\
     <ul id="easyIndexedDB-pages" style="list-style:">\
         <li id="easyIndexedDb-edit-form">\
@@ -37,7 +49,6 @@ return '<div id="easyIndexedDB-contents" style="margin:4px;pedding:4px;font-size
     </ul>\
 </div>\
 ';
-
 }
 
 function oldDBfac() {
