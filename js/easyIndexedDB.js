@@ -33,7 +33,8 @@ class easyIndexedDB {
 function startMain(easyIndexedDBname) {
   let easyDB = new easyIndexedDB("test");
   let db = easyDB.getDB();
-  alert(easyDB.name);
+  db();
+  //alert(easyDB.name);
 }
 
 function getMainPage() {
