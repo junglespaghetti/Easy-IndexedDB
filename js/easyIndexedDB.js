@@ -1,7 +1,8 @@
 class easyIndexedDB {
-  constructor(name, version, tableData) {
+  constructor(name, version, tableData,Dexie) {
     this.name = name || "easyIndexedDB";
     this.version = version || 1;
+    this.Dexie = Dexie;
     this.tableData = tableData || {
       dbList: "++id, name, version, table ",
       settings: "name, value",
@@ -9,7 +10,7 @@ class easyIndexedDB {
     };
     this.db = (
       //Dexie.exists(this.name).then(function(exists) {
-        let eDB = new Dexie(this.name);
+        let eDB = new this.Dexie(this.name);
         console.log(this.tableData);
         alert(this.tableData);
         eDB.version(this.version).stores(this.tableData);
@@ -31,7 +32,7 @@ class easyIndexedDB {
 }
 
 function startMain(easyIndexedDBname) {
-  let easyDB = new easyIndexedDB("test");
+  let easyDB = new easyIndexedDB("test",,Dexis);
   let db = easyDB.getDB();
   db();
   //alert(easyDB.name);
