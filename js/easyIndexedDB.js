@@ -5,25 +5,24 @@ class EasyIndexedDB {
   }
 
   isInDB(db, table, field) {
-    if (!this[db]) {
-      return false;
-    } else if (!table && !this.db[db].where("name").equalsIgnoreCase(table)) {
-      return db;
-    } else if (field) {
       this.db.dbList
         .where("name")
-        .equalsIgnoreCase(table)
+        .equalsIgnoreCase(db)
         .toArray()
         .then(function(arr) {
-          if (arr.includes(field)) {
+        if(arr.length == 0){
+          return false;
+        }else if(table){
+          let fields = JSON.parse(arr[0]["table"]);
+          if (field && fields.includes(field)) {
             return field;
           } else {
             return table;
           }
+        }else{
+          return db;
+        }
         });
-    } else {
-      return table;
-    }
   }
 
   dbList(callback) {
