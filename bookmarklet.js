@@ -1,9 +1,22 @@
-javascript: (function(f, urls, i, s) {
+javascript: (function(f, urls,cssUlrs, i, s,c) {
   urls = [
+    "https://easy-indexeddb.glitch.me/js/easyIndexedDB.js",
     "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.1.0/papaparse.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/dexie/2.0.4/dexie.min.js",
-    "https://cdnjs.cloudflare.com/ajax/libs/Ventus/0.3.0/ventus.min.js"
+    "https://cdn.jsdelivr.net/npm/jspanel4@4.9.4/dist/jspanel.js"
   ];
+  cssUlrs = [
+    "https://use.fontawesome.com/releases/v5.6.3/css/all.css",
+    "https://cdn.jsdelivr.net/npm/jspanel4@4.9.4/dist/jspanel.css",
+    "https://junglespaghetti.github.io/trade-recorder/css/trade-recoder.css"   
+  ];
+  for (i = 0; i < cssUlrs.length; i++) {
+    c = document.createElement("link");
+    c.type = "text/css";
+    c.rel = "stylesheet";
+    c.href = cssUlrs[i];
+    document.body.appendChild(c);
+    }
   for (i = 0; i < urls.length; i++) {
     s = document.createElement("script");
     s.src = urls[i];
@@ -15,16 +28,5 @@ javascript: (function(f, urls, i, s) {
     document.body.appendChild(s);
   }
 })(function() {
-  var wm = new Ventus.WindowManager();
- var window = wm.createWindow({
-	title: 'A new window',
-	x: 50,
-	y: 50,
-	width: 400,
-	height: 250,
-	animations: false,
-	stayinspace: true
-});
-
-window.open();
+  startMain();
 });
