@@ -32,7 +32,7 @@ class easyIndexedDB {
 
 function startMain(easyIndexedDBname) {
   let easyDB = new easyIndexedDB("test");
-  //let db = easyDB.getDB();
+  let db = easyDB.getDB();
   alert(easyDB.name);
 }
 
