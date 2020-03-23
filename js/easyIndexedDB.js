@@ -4,15 +4,53 @@ class EasyIndexedDB {
     this.db = db;
   }
 
-  getDB() {
-    return this.db;
+  isInDB(db, table, field) {
+    if (!this[db]) {
+      return false;
+    } else if (!this.db[db].where("name").equalsIgnoreCase(table)) {
+      return db;
+    } else if (
+      !this.db.dbList
+        .where("name")
+        .equalsIgnoreCase(table)
+        .toArray()
+    ) {
+      return table;
+    }else{
+      this.db.dbList
+        .where("name")
+        .equalsIgnoreCase(table)
+        .toArray().then(function(att){
+        
+      });
+    }
+  }
+
+  dbList(callback) {
+    this.db.dbList.toArray().then(function(data) {
+      callback(data);
+    });
+  }
+
+  tableData(name, callback) {
+    this.db.dbList
+      .where("name")
+      .equalsIgnoreCase(name)
+      .toArray()
+      .then(function(arr) {
+        callback(arr);
+      });
   }
 }
 
-function startMain(name,version,data) {
-  let  dbName = name || "easyIndexedDB";
-  let  dbVersion = version || 1;
-  let tableData = data || {dbList: "++id, name, version, table ",settings: "name, value",files:"fileName,type" }; 
+function startMain(name, version, data) {
+  let dbName = name || "easyIndexedDB";
+  let dbVersion = version || 1;
+  let tableData = data || {
+    dbList: "++id, name, version, table ",
+    settings: "name, value",
+    files: "fileName,type"
+  };
   Dexie.exists(dbName).then(function(exists) {
     var eDB = new Dexie(dbName);
     eDB.version(dbVersion).stores(tableData);
@@ -23,9 +61,9 @@ function startMain(name,version,data) {
         table: JSON.stringify(tableData)
       });
     }
-  let easyDB = new EasyIndexedDB(dbName, eDB);
-  let db = easyDB.getDB();
-  db();
+    let easyDB = new EasyIndexedDB(dbName, eDB);
+    let db = easyDB.getDB();
+    db();
   });
   //alert(easyDB.name);
 }
