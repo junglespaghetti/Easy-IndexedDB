@@ -4,23 +4,23 @@ class EasyIndexedDB {
     this.db = db;
   }
 
-  isInDB(db, table, field) {
+  isInDB(callback,db, table, field) {
       this.db.dbList
         .where("name")
         .equalsIgnoreCase(db)
         .toArray()
         .then(function(arr) {
         if(arr.length == 0){
-          return false;
+          callback(false);
         }else if(table){
           let fields = JSON.parse(arr[0]["table"]);
           if (field && fields.includes(field)) {
-            return field;
+            callback(field);
           } else {
-            return table;
+            callback(table);
           }
         }else{
-          return db;
+          callback(db);
         }
         });
   }
@@ -61,7 +61,7 @@ function startMain(name, version, data) {
       });
     }
     let easyDB = new EasyIndexedDB(dbName, eDB);
-    alert(easyDB.isInDB(dbName));
+    easyDB.isInDB(function(db){alert(db)},dbName);
     let db = easyDB.getDB();
     db();
   });
