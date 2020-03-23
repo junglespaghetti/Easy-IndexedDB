@@ -9,23 +9,21 @@ class EasyIndexedDB {
   }
 }
 
-function startMain() {
-  let easyIndexedDBname = "easyDB";
-  Dexie.exists(easyIndexedDBname).then(function(exists) {
-    var eDB = new Dexie("easyIndexedDB");
-    let tableData = {
-      dbList: "++id, name, version, table ",
-      settings: "name, value"
-    };
-    eDB.version(1).stores(tableData);
+function startMain(name,version,data) {
+  let  dbName = name || "easyIndexedDB";
+  let  dbVersion = version || 1;
+  let tableData = data || {dbList: "++id, name, version, table ",settings: "name, value",files:"fileName,type" }; 
+  Dexie.exists(dbName).then(function(exists) {
+    var eDB = new Dexie(dbName);
+    eDB.version(dbVersion).stores(tableData);
     if (!exists) {
       eDB.dbList.put({
-        name: easyIndexedDBname,
-        version: 1,
+        name: dbName,
+        version: dbVersion,
         table: JSON.stringify(tableData)
       });
     }
-  let easyDB = new EasyIndexedDB(easyIndexedDBname, eDB);
+  let easyDB = new EasyIndexedDB(dbName, eDB);
   let db = easyDB.getDB();
   db();
   });
