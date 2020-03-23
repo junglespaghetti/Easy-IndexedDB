@@ -13,6 +13,7 @@ class easyIndexedDB {
   initDB() {
     Dexie.exists(this.name).then(function(exists) {
       let eDB = new Dexie(this.name);
+      console.log(this.tableData);
       eDB.version(this.version).stores(this.tableData);
       if (!exists) {
         eDB.dbList.put({
