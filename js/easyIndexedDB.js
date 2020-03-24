@@ -10,7 +10,7 @@ class EasyIndexedDB {
     this.dbList = undefined;
   }
 
-  async iniEasyDB() {
+  async iniEasyDB(callback) {
     let dbFlag = await Dexie.exists(this.name);
     let db = await new Dexie(this.name);
     await db.version(this.version).stores(this.tableData);
@@ -22,7 +22,7 @@ class EasyIndexedDB {
       });
     }
     this.dbList = await this.db.dbList;
-    return true;
+    callback(this);
   }
 
   getDBdata(callback, dbName) {
@@ -67,8 +67,7 @@ class EasyIndexedDB {
 function startMain(name, version, data) {
   let easyDB = new EasyIndexedDB(name, version, data);
   alert(easyDB.dbList);
-  let flag = easyDB.iniEasyDB();
-  alert(easyDB.dbList + "   " + flag);
+  easyDB.iniEasyDB(function(db){this.name});
 }
 
 function getMainPage() {
