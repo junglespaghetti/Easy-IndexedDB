@@ -1,46 +1,25 @@
-class hoge {
-  constructor(b) {
-    this.a = b;
-  }
-
-  static async init() {
-    let c = this.unko;
-    let d = await new hoge(c);
-    return await c;
-  }
-  unko() {
-    return Dexie.exists("easyIndexedDB");
-  }
-}
-
 class EasyIndexedDB {
-  constructor(obj, dbList) {
-    this.name = obj.name;
-    this.version = obj.version;
-    this.tableData = obj.data;
-    this.dbList = dbList;
-  }
-
-  static async init(obj) {
-    obj = obj|| {};
-    obj.name = obj.name || "easyIndexedDB";
-    obj.version = obj.version || 1;
-    obj.data = obj.data || {
+  constructor(obj) {
+    this.name = obj.name || "easyIndexedDB";
+    this.version = obj.version || 1;
+    this.tableData = obj.data || {
       dbList: "name, version, table ",
       settings: "name, value",
       files: "name,type"
     };
-    let exists = await Dexie.exists(obj.name);
-    let initDB = await new Dexie(obj.name);
-    await initDB.version(obj.version).stores(obj.data);
-    if (!exists) {
-      await initDB.dbList.put({
-        name: obj.name,
-        version: obj.version,
-        table: JSON.stringify(obj.data)
+    this.exists = Dexie.exists(this.name);
+    this.db = new Dexie(this.name);
+  }
+
+  async init() {
+    await this.db.version(this.version).stores(this.tableData);
+    if (!this.exists) {
+      await this.db.dbList.add({
+        name: this.name,
+        version: this.version,
+        table: JSON.stringify(this.tableData)
       });
     }
-    return new EasyIndexedDB(obj, initDB);
   }
 
   getDBdata(dbName) {
@@ -57,8 +36,8 @@ class EasyIndexedDB {
       });
   }
 
-  getDBList(callback) {
-    return this.dbList
+  getDB() {
+    return this.name
     }
 
   getTableList(callback, dbName) {
@@ -77,12 +56,13 @@ class EasyIndexedDB {
 }
 
 function startMain(name, version, data) {
-  let easyDB = EasyIndexedDB.init();
-  alert(JSON.stringify(easyDB.dbList));
-  let val = easyDB.getDBList;
-    val.dbList.toArray().then(function(){
-      alert("ok");
-    })
+  let jData = {name:"easyIndexedDB"}
+  let easyDB = new EasyIndexedDB(jData);
+  if(easyDB.exists){
+  alert(JSON.stringify(easyDB.db));
+  }
+  //easyDB.db.dbList.toArray.then(function(arr){alert(arr.length)});
+  //  alert(val.length);
 }
 
 function getMainPage() {
