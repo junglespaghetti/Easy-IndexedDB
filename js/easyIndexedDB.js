@@ -1,3 +1,18 @@
+class hoge {
+  constructor(b) {
+    this.a = b;
+  }
+
+  static async init() {
+    let c = await Dexie.exists("easyIndexedDB");
+    let d = new hoge(c);
+    return d;
+  }
+  unko() {
+    return this.a;
+  }
+}
+
 class EasyIndexedDB {
   constructor(name, version, data, dbList) {
     this.name = name || "easyIndexedDB";
@@ -23,7 +38,7 @@ class EasyIndexedDB {
           files: "name,type"
         };
         Dexie.exists(dbName).then(exists => {
-          let eDB =  new Dexie(dbName);
+          let eDB = new Dexie(dbName);
           eDB.version(dbVarsion).stores(dbTableData);
           if (!exists) {
             eDB.dbList.put({
@@ -32,7 +47,7 @@ class EasyIndexedDB {
               table: JSON.stringify(dbTableData)
             });
           }
-alert("aaa");
+          alert("aaa");
           return eDB.db.dbList;
         });
       }
@@ -94,9 +109,10 @@ alert("aaa");
 }
 
 function startMain(name, version, data) {
-  let easyDB = EasyIndexedDB.init(name, version, data);
-  alert(easyDB);
-}
+  let easyDB = hoge.init();
+  alert(easyDB.unko())
+ alert(easyDB.a);
+} 
 
 function getMainPage() {
   return '<div id="easyIndexedDB-contents" style="margin:4px;pedding:4px;font-size: small;">\
