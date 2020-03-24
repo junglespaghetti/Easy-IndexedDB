@@ -1,12 +1,23 @@
 class EasyIndexedDB {
-  constructor(name, db) {
+  constructor(name, version, data) {
     this.name = name || "easyIndexedDB";
-    this.db = db;
-    this.dataBase;
+    this.version = version || 1;
+    this.tableData = data || {
+      dbList: "++id, name, version, table ",
+      settings: "name, value",
+      files: "fileName,type"
+    };
+    this.dbList = undefined;
   }
-  
-  iniEasyDB(){
-    this.dataBase = new Dexie('dbName');
+
+  async iniEasyDB() {
+    let dbFlag = await Dexie.exists(this.name);
+    let db = await new Dexie(this.name);
+    await db.version(this.version ).stores(this.tableData);
+    if (dbFlag) {
+      await db.dbList.put({name:this.name,version:this.version,table:JSON.stringify(this.tableData)});
+    }
+    this.dbList = await this.db.dbList;
   }
 
   getDBdata(callback, dbName) {
@@ -24,17 +35,15 @@ class EasyIndexedDB {
   }
 
   getDBList(callback) {
-    this.db.dbList
-      .toArray()
-      .then(function(arr) {
-        if (arr.length == 0) {
-          callback(false);
-        } else {
-          callback(arr);
-        }
-      });
+    this.db.dbList.toArray().then(function(arr) {
+      if (arr.length == 0) {
+        callback(false);
+      } else {
+        callback(arr);
+      }
+    });
   }
-  
+
   getTableList(callback, dbName) {
     this.db.dbList
       .where("name")
@@ -44,11 +53,10 @@ class EasyIndexedDB {
         if (arr.length == 0) {
           callback(false);
         } else {
-          callback(JSON.parse(arr[0]["table"]));
+          callback(arr[0]["table"]);
         }
       });
   }
-
 }
 
 function startMain(name, version, data) {
@@ -69,12 +77,10 @@ function startMain(name, version, data) {
         table: JSON.stringify(tableData)
       });
     }
-    let easyDB = new EasyIndexedDB(dbName, eDB);
-    easyDB.getDBdata((db) => {
-      alert(JSON.stringfy(db));
-    }, dbName);
-    alert(easyDB.name);
-    let db = easyDB.iniEasyDB();
+    let easyDB = new EasyIndexedDB();
+    alert(easyDB.dbList);
+    easyDB.iniEasyDB();
+    alert(easyDB.dbList);
   });
   //alert(easyDB.name);
 }
