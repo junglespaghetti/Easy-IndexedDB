@@ -4,12 +4,12 @@ class hoge {
   }
 
   static async init() {
-    let c = Dexie.exists("easyIndexedDB");
+    let c = this.unko;
     let d = await new hoge(c);
     return await c;
   }
   unko() {
-    return this.a;
+    return Dexie.exists("easyIndexedDB");
   }
 }
 
@@ -22,7 +22,7 @@ class EasyIndexedDB {
   }
 
   static async init(obj) {
-    obj = obj.name || {};
+    obj = obj|| {};
     obj.name = obj.name || "easyIndexedDB";
     obj.version = obj.version || 1;
     obj.data = obj.data || {
@@ -40,48 +40,26 @@ class EasyIndexedDB {
         table: JSON.stringify(obj.data)
       });
     }
-    let initDBlist = initDB.dbList;
-    return new EasyIndexedDB(obj, initDBlist);
+    return new EasyIndexedDB(obj, initDB);
   }
 
-  async iniEasyDB(callback) {
-    let dbFlag = await Dexie.exists(this.name);
-    let db = await new Dexie(this.name);
-    await db.version(this.version).stores(this.tableData);
-    if (dbFlag) {
-      await db.dbList.put({
-        name: this.name,
-        version: this.version,
-        table: JSON.stringify(this.tableData)
-      });
-    }
-    this.dbList = await this.db.dbList;
-    callback(this);
-  }
-
-  getDBdata(callback, dbName) {
-    this.db.dbList
+  getDBdata(dbName) {
+    this.dbList
       .where("name")
       .equalsIgnoreCase(dbName)
       .toArray()
       .then(function(arr) {
         if (arr.length == 0) {
-          callback(false);
+          return undefined;
         } else {
-          callback(arr[0]);
+          return arr[0];
         }
       });
   }
 
   getDBList(callback) {
-    this.db.dbList.toArray().then(function(arr) {
-      if (arr.length == 0) {
-        callback(false);
-      } else {
-        callback(arr);
-      }
-    });
-  }
+    return this.dbList
+    }
 
   getTableList(callback, dbName) {
     this.db.dbList
@@ -99,10 +77,12 @@ class EasyIndexedDB {
 }
 
 function startMain(name, version, data) {
-  let easyDB = hoge.init();
-  if (!easyDB) {
-    alert(easyDB);
-  }
+  let easyDB = EasyIndexedDB.init();
+  alert(JSON.stringify(easyDB.dbList));
+  let val = easyDB.getDBList;
+    val.dbList.toArray().then(function(){
+      alert("ok");
+    })
 }
 
 function getMainPage() {
