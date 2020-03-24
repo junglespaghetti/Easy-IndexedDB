@@ -1,35 +1,44 @@
 class EasyIndexedDB {
   constructor(obj) {
-    this.name = obj.name || "easyIndexedDB";
-    this.version = obj.version || 1;
-    this.tableData = obj.data || {
+    this.name = obj.name;
+    this.version = obj.version;
+    this.tableData = obj.data;
+    this.exists = this.name ?  Dexie.exists(this.name) : undefined;
+    this.db = this.name ? new Dexie(this.name) : undefined;
+    //
+    this.eDBname = obj.eDBname || "easyIndexedDB";
+    this.eDBversion = obj.eDBversion || 1;
+    this.eDBtableData = obj.eDBdata || {
       dbList: "name, version, table ",
       settings: "name, value",
       files: "name,type"
     };
-    this.exists = Dexie.exists(this.name);
-    this.db = new Dexie(this.name);
+    this.eDBexists = Dexie.exists(this.eDBname);
+    this.eDB = new Dexie(this.eDBname);
   }
 
-  async init() {
-    await this.db.version(this.version).stores(this.tableData);
-    if (!this.exists) {
-      await this.db.dbList.add({
+  async initEasyDB() {
+    await this.eDB.version(this.eDBversion).stores(this.eDBtableData);
+    if (!this.eDBexists) {
+      await this.eDB.dbList.add({
         name: this.name,
         version: this.version,
-        table: JSON.stringify(this.tableData)
+        table: JSON.stringify(this.eDBtableData)
       });
     }
   }
 
   getDBdata(dbName) {
-    this.dbList
+    if(!this.eDBexists){
+      this.initEasyDB()
+    }
+    this.eDB.dbList
       .where("name")
       .equalsIgnoreCase(dbName)
       .toArray()
       .then(function(arr) {
         if (arr.length == 0) {
-          return undefined;
+          alert("errar not "+dbName)
         } else {
           return arr[0];
         }
