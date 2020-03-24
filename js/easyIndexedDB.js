@@ -7,9 +7,22 @@ class EasyIndexedDB {
       settings: "name, value",
       files: "fileName,type"
     };
-    this.dbList = undefined;
+    this.ready = new Promise(async resolve => {
+      let dbFlag = await Dexie.exists(this.name);
+      let db = await new Dexie(this.name);
+      await db.version(this.version).stores(this.tableData);
+      if (dbFlag) {
+        await db.dbList.put({
+          name: this.name,
+          version: this.version,
+          table: JSON.stringify(this.tableData)
+        });
+      }
+      this.dbList = await this.db.dbList;
+      resolve()
+    });
   }
-
+  /*
   async iniEasyDB(callback) {
     let dbFlag = await Dexie.exists(this.name);
     let db = await new Dexie(this.name);
@@ -23,7 +36,7 @@ class EasyIndexedDB {
     }
     this.dbList = await this.db.dbList;
     callback(this);
-  }
+  }*/
 
   getDBdata(callback, dbName) {
     this.db.dbList
@@ -64,10 +77,11 @@ class EasyIndexedDB {
   }
 }
 
-function startMain(name, version, data) {
-  let easyDB = new EasyIndexedDB(name, version, data);
+async function startMain(name, version, data) {
+  let easyDB = new EasyIndexedDB(name, version, data)();
   alert(easyDB.dbList);
-  easyDB.iniEasyDB(function(db){this.name});
+  await easyDB.ready;
+  alert(easyDB.dbList);
 }
 
 function getMainPage() {
