@@ -4,9 +4,9 @@ class hoge {
   }
 
   static async init() {
-    let c = await Dexie.exists("easyIndexedDB");
-    let d = new hoge(c);
-    return d;
+    let c = Dexie.exists("easyIndexedDB");
+    let d = await new hoge(c);
+    return await c;
   }
   unko() {
     return this.a;
@@ -14,44 +14,34 @@ class hoge {
 }
 
 class EasyIndexedDB {
-  constructor(name, version, data, dbList) {
-    this.name = name || "easyIndexedDB";
-    this.version = version || 1;
-    this.tableData = data || {
-      dbList: "++id, name, version, table ",
+  constructor(obj, dbList) {
+    this.name = obj.name;
+    this.version = obj.version;
+    this.tableData = obj.data;
+    this.dbList = dbList;
+  }
+
+  static async init(obj) {
+    obj = obj.name || {};
+    obj.name = obj.name || "easyIndexedDB";
+    obj.version = obj.version || 1;
+    obj.data = obj.data || {
+      dbList: "name, version, table ",
       settings: "name, value",
       files: "name,type"
     };
-    this.dbList = dbList;
-  }
-  static async init(name, version, data) {
-    return new EasyIndexedDB(
-      name,
-      version,
-      data,
-      await function(name, version, data) {
-        let dbName = name || "easyIndexedDB";
-        let dbVarsion = version || 1;
-        let dbTableData = data || {
-          dbList: "++id, name, version, table ",
-          settings: "name, value",
-          files: "name,type"
-        };
-        Dexie.exists(dbName).then(exists => {
-          let eDB = new Dexie(dbName);
-          eDB.version(dbVarsion).stores(dbTableData);
-          if (!exists) {
-            eDB.dbList.put({
-              name: dbName,
-              version: dbVarsion,
-              table: JSON.stringify(dbTableData)
-            });
-          }
-          alert("aaa");
-          return eDB.db.dbList;
-        });
-      }
-    );
+    let exists = await Dexie.exists(obj.name);
+    let initDB = await new Dexie(obj.name);
+    await initDB.version(obj.version).stores(obj.data);
+    if (!exists) {
+      await initDB.dbList.put({
+        name: obj.name,
+        version: obj.version,
+        table: JSON.stringify(obj.data)
+      });
+    }
+    let initDBlist = initDB.dbList;
+    return new EasyIndexedDB(obj, initDBlist);
   }
 
   async iniEasyDB(callback) {
@@ -110,9 +100,10 @@ class EasyIndexedDB {
 
 function startMain(name, version, data) {
   let easyDB = hoge.init();
-  alert(easyDB.unko())
- alert(easyDB.a);
-} 
+  if (!easyDB) {
+    alert(easyDB);
+  }
+}
 
 function getMainPage() {
   return '<div id="easyIndexedDB-contents" style="margin:4px;pedding:4px;font-size: small;">\
