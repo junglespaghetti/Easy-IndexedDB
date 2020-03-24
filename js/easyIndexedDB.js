@@ -10,7 +10,7 @@ class EasyIndexedDB {
     this.dbList = dbList;
   }
   static async init(name, version, data) {
-    return await new EasyIndexedDB(
+    return new EasyIndexedDB(
       name,
       version,
       data,
@@ -32,7 +32,7 @@ class EasyIndexedDB {
               table: JSON.stringify(dbTableData)
             });
           }
-
+alert("aaa");
           return eDB.db.dbList;
         });
       }
@@ -95,7 +95,7 @@ class EasyIndexedDB {
 
 function startMain(name, version, data) {
   let easyDB = EasyIndexedDB.init(name, version, data);
-  alert(easyDB.dbList);
+  alert(easyDB);
 }
 
 function getMainPage() {
