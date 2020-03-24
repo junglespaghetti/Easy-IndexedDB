@@ -79,8 +79,8 @@ function startMain(name, version, data) {
     }
     let easyDB = new EasyIndexedDB();
     alert(easyDB.dbList);
-    easyDB.iniEasyDB();
-    alert(easyDB.dbList);
+    async () => {await easyDB.iniEasyDB();alert(easyDB.dbList);}
+    
   });
   //alert(easyDB.name);
 }
