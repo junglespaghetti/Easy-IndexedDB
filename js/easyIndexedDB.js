@@ -1,28 +1,44 @@
 class EasyIndexedDB {
-  constructor(name, version, data) {
+  constructor(name, version, data, dbList) {
     this.name = name || "easyIndexedDB";
     this.version = version || 1;
     this.tableData = data || {
       dbList: "++id, name, version, table ",
       settings: "name, value",
-      files: "fileName,type"
+      files: "name,type"
     };
-    this.ready = new Promise(async resolve => {
-      let dbFlag = await Dexie.exists(this.name);
-      let db = await new Dexie(this.name);
-      await db.version(this.version).stores(this.tableData);
-      if (dbFlag) {
-        await db.dbList.put({
-          name: this.name,
-          version: this.version,
-          table: JSON.stringify(this.tableData)
+    this.dbList = dbList;
+  }
+  static async init(name, version, data) {
+    return new EasyIndexedDB(
+      name,
+      version,
+      data,
+      await function() {
+        let dbName = name || "easyIndexedDB";
+        let dbVarsion = version || 1;
+        let dbTableData = data || {
+          dbList: "++id, name, version, table ",
+          settings: "name, value",
+          files: "name,type"
+        };
+        Dexie.exists(dbName).then(function(exists) {
+          let eDB = new Dexie(dbName);
+          eDB.version(dbVarsion).stores(dbTableData);
+          if (!exists) {
+            eDB.dbList.put({
+              name: dbName,
+              version: dbVarsion,
+              table: JSON.stringify(dbTableData)
+            });
+          }
+
+          return eDB.db.dbList;
         });
       }
-      this.dbList = await this.db.dbList;
-      resolve()
-    });
+    );
   }
-  /*
+
   async iniEasyDB(callback) {
     let dbFlag = await Dexie.exists(this.name);
     let db = await new Dexie(this.name);
@@ -36,7 +52,7 @@ class EasyIndexedDB {
     }
     this.dbList = await this.db.dbList;
     callback(this);
-  }*/
+  }
 
   getDBdata(callback, dbName) {
     this.db.dbList
@@ -77,10 +93,8 @@ class EasyIndexedDB {
   }
 }
 
-async function startMain(name, version, data) {
-  let easyDB = new EasyIndexedDB(name, version, data)();
-  alert(easyDB.dbList);
-  await easyDB.ready;
+function startMain(name, version, data) {
+  let easyDB = EasyIndexedDB.init(name, version, data)();
   alert(easyDB.dbList);
 }
 
