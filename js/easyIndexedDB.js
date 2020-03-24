@@ -10,11 +10,11 @@ class EasyIndexedDB {
     this.dbList = dbList;
   }
   static async init(name, version, data) {
-    return new EasyIndexedDB(
+    return await new EasyIndexedDB(
       name,
       version,
       data,
-      await function() {
+      await function(name, version, data) {
         let dbName = name || "easyIndexedDB";
         let dbVarsion = version || 1;
         let dbTableData = data || {
@@ -22,8 +22,8 @@ class EasyIndexedDB {
           settings: "name, value",
           files: "name,type"
         };
-        Dexie.exists(dbName).then(function(exists) {
-          let eDB = new Dexie(dbName);
+        Dexie.exists(dbName).then(exists => {
+          let eDB =  new Dexie(dbName);
           eDB.version(dbVarsion).stores(dbTableData);
           if (!exists) {
             eDB.dbList.put({
