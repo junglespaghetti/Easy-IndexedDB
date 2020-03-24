@@ -13,11 +13,16 @@ class EasyIndexedDB {
   async iniEasyDB() {
     let dbFlag = await Dexie.exists(this.name);
     let db = await new Dexie(this.name);
-    await db.version(this.version ).stores(this.tableData);
+    await db.version(this.version).stores(this.tableData);
     if (dbFlag) {
-      await db.dbList.put({name:this.name,version:this.version,table:JSON.stringify(this.tableData)});
+      await db.dbList.put({
+        name: this.name,
+        version: this.version,
+        table: JSON.stringify(this.tableData)
+      });
     }
     this.dbList = await this.db.dbList;
+    return true;
   }
 
   getDBdata(callback, dbName) {
@@ -60,29 +65,10 @@ class EasyIndexedDB {
 }
 
 function startMain(name, version, data) {
-  let dbName = name || "easyIndexedDB";
-  let dbVersion = version || 1;
-  let tableData = data || {
-    dbList: "++id, name, version, table ",
-    settings: "name, value",
-    files: "fileName,type"
-  };
-  Dexie.exists(dbName).then(function(exists) {
-    var eDB = new Dexie(dbName);
-    eDB.version(dbVersion).stores(tableData);
-    if (!exists) {
-      eDB.dbList.put({
-        name: dbName,
-        version: dbVersion,
-        table: JSON.stringify(tableData)
-      });
-    }
-    let easyDB = new EasyIndexedDB();
-    alert(easyDB.dbList);
-    async () => {await easyDB.iniEasyDB();alert(easyDB.dbList);}
-    
-  });
-  //alert(easyDB.name);
+  let easyDB = new EasyIndexedDB(name, version, data);
+  alert(easyDB.dbList);
+  let flag = easyDB.iniEasyDB();
+  alert(easyDB.dbList + "   " + flag);
 }
 
 function getMainPage() {
