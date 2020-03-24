@@ -94,7 +94,7 @@ class EasyIndexedDB {
 }
 
 function startMain(name, version, data) {
-  let easyDB = EasyIndexedDB.init(name, version, data)();
+  let easyDB = EasyIndexedDB.init(name, version, data);
   alert(easyDB.dbList);
 }
 
