@@ -1,14 +1,71 @@
-<style>\
-  #easyInedexdDB-uplaod-button label {\
-    color: white;\
-    background-color: blue;\
-    padding: 6px;\
-    border-radius: 12px;\
-  }\
-</style>\
-<h3>\
-  Easy IndexedDB\
-</h3>\
-<p>\
-  <label><input type="file" id="easyInedexdDB-uplaod-button" style="display:none"/>upload</label>\
-</p>\
+<style>
+  .dropdown {
+    display: flex;
+  }
+
+  .menu {
+    width: 300px;
+    text-align: center;
+  }
+
+  .menu-title {
+    background: #090032;
+    color: #ffffff;
+  }
+
+  .sub-menu {
+    display: none;
+    background: #B9B9B9;
+    position: relative;
+  }
+
+  .sub-menu > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 300px;
+  }
+
+  .sub-menu > ul > li > a {
+    text-decoration: none;
+    color: #ffffff;
+  }
+
+  .menu:hover .sub-menu {
+    display: inline-block;
+  }
+</style>
+
+<div class="dropdown">
+  <div class="menu">
+    <div class="menu-title">Menu1</div>
+    <div class="sub-menu">
+      <ul>
+        <li><a href="#">Sub Menu1</a></li>
+        <li><a href="#">Sub Menu1</a></li>
+        <li><a href="#">Sub Menu1</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="menu">
+    <div class="menu-title">Menu2</div>
+    <div class="sub-menu">
+      <ul>
+        <li><a href="#">Sub Menu1</a></li>
+        <li><a href="#">Sub Menu1</a></li>
+        <li><a href="#">Sub Menu1</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="menu">
+    <div class="menu-title">Menu3</div>
+    <div class="sub-menu">
+      <ul>
+        <li><a href="#">Sub Menu1</a></li>
+        <li><a href="#">Sub Menu1</a></li>
+        <li><a href="#">Sub Menu1</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
