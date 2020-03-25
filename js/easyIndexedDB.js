@@ -14,13 +14,16 @@ class EasyIndexedDB {
       files: "name,type"
     };
     this.eDBexists = Dexie.exists(this.eDBname);
-    this.eDB = new Dexie(this.eDBname);
+    //this.eDB = new Dexie(this.eDBname);
   }
 
   async initEasyDB() {
-    await this.eDB.version(this.eDBversion).stores(this.eDBtableData);
+    let eDB = new Dexie(this.eDBname);
+    alert(this.eDBtableData);
+    eDB.version(this.eDBversion).stores(this.eDBtableData);
+    //eDB.open();
     if (!this.eDBexists) {
-      await this.eDB.dbList.add({
+       eDB.dbList.add({
         name: this.name,
         version: this.version,
         table: JSON.stringify(this.eDBtableData)
@@ -28,22 +31,12 @@ class EasyIndexedDB {
     }
   }
 
-  getDBdata(dbName) {
-    if(!this.eDBexists){
+ async eachDBlist(callback) {
       this.initEasyDB()
-    }
-    this.eDB.dbList
-      .where("name")
-      .equalsIgnoreCase(dbName)
-      .toArray()
-      .then(function(arr) {
-        if (arr.length == 0) {
-          alert("errar not "+dbName)
-        } else {
-          return arr[0];
-        }
-      });
-  }
+   alert(this.eDBexists)
+    //let eDB = await new Dexie(this.eDBname);
+    //await eDB.dbList.then(callback)
+   }
 
   getDB() {
     return this.name
@@ -68,7 +61,8 @@ function startMain(name, version, data) {
   let jData = {name:"easyIndexedDB"}
   let easyDB = new EasyIndexedDB(jData);
   if(easyDB.exists){
-  alert(JSON.stringify(easyDB.db));
+    easyDB.eachDBlist((a) => {alert(a);})
+    //alert(JSON.stringify(easyDB.eDB));
   }
   //easyDB.db.dbList.toArray.then(function(arr){alert(arr.length)});
   //  alert(val.length);
