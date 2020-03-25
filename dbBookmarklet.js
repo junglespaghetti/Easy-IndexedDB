@@ -6,6 +6,7 @@ javascript: (function(f, urls, cssUlrs, i, s, c) {
     "https://easy-indexeddb.glitch.me/js/dbBookmarklet.js"
   ];
   cssUlrs = [
+    "https://cdnjs.cloudflare.com/ajax/libs/handsontable/7.4.2/handsontable.full.min.css",
     "https://use.fontawesome.com/releases/v5.6.3/css/all.css",
     "https://cdn.jsdelivr.net/npm/jspanel4@4.9.4/dist/jspanel.css",
     "https://junglespaghetti.github.io/trade-recorder/css/trade-recoder.css"

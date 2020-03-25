@@ -1,5 +1,32 @@
 function startMain() {
   
+  showWindowFrame();
+  
+  alert("OK!");
+}
+
+function showWindowFrame() {
+  var easyIndexedDB = jsPanel.create({
+    headerTitle: "Easy IndexedDB",
+    position: "center-top 0 80",
+    contentSize: "450 250",
+    content: '<div id="table-element"></div>',
+    headerLogo:
+      '<input type="text" id="db-input" list="db-list" placeholder="input DB name" autocomplete="off" style="margin-left:8px;font-size:10pt;"><datalist id="db-list"></datalist>',
+    headerToolbar:
+      '<input type="text" id="table-input" list="table-list" placeholder="input Table name" autocomplete="off" style="font-size:10pt;"><datalist id="table-list"></datalist>' +
+      '<div style="margin-left:8px;">' +
+      '<span id="bus"><i class="fas fa-file-import fa-lg"></i></span>' +
+      '<span id="train"><i class="fas fa-file-download fa-lg"></i></span>' +
+      "</div>",
+    callback: function(panel) {
+      showGridTable()
+    }
+  });
+  
+}
+
+function showGridTable(){
   var data = [
   ['', 'Ford', 'Tesla', 'Toyota', 'Honda'],
   ['2017', 10, 11, 12, 13],
@@ -16,81 +43,6 @@ var hot = new Handsontable(container, {
   dropdownMenu: true,
   licenseKey: "non-commercial-and-evaluation"
 });
-
-  
-  alert("OK!");
-}
-
-function showWindowFrame() {
-  var easyIndexedDB = jsPanel.create({
-    headerTitle: "Easy IndexedDB",
-    position: "center-top 0 80",
-    contentSize: "450 250",
-    content: "<div id="table-element"></div>",
-    headerLogo:
-      '<input type="text" id="db-input" list="db-list" placeholder="input DB name" autocomplete="off" style="margin-left:8px;font-size:10pt;"><datalist id="db-list"></datalist>',
-    headerToolbar:
-      '<input type="text" id="table-input" list="table-list" placeholder="input Table name" autocomplete="off" style="font-size:10pt;"><datalist id="table-list"></datalist>' +
-      '<div style="margin-left:8px;">' +
-      '<span id="bus"><i class="fas fa-file-import fa-lg"></i></span>' +
-      '<span id="train"><i class="fas fa-file-download fa-lg"></i></span>' +
-      "</div>",
-    callback: function(panel) {
-      Dexie.exists("easyIndexedDB").then(function(exists) {
-        let eDB = new Dexie("easyIndexedDB");
-        let tableData = {
-          dbList: "++id, name, version, table ",
-          settings: "name, value"
-        };
-        eDB.version(1).stores(tableData);
-        if (!exists) {
-          eDB.dbList.put({
-            name: "easyIndexedDB",
-            version: 1,
-            table: JSON.stringify(tableData)
-          });
-          eDB.settings.put({ name: "status", value: "new" });
-        }
-        eDB.dbList.toArray().then(function(data) {
-          let dataList = document.getElementById("db-list");
-          data.forEach(function(val) {
-            let option = document.createElement("option");
-            option.text = val.name;
-            option.value = val.name;
-            dataList.appendChild(option);
-          });
-        });
-      });
-      let dbInput = document.getElementById("db-input");
-      dbInput.addEventListener("change", function(event) {
-        selectDB(event);
-      });
-      dbInput.addEventListener("click", function(event) {
-        dbInput.value = "";
-      });
-      let tableInput = document.getElementById("table-input");
-      tableInput.addEventListener("change", function(event) {
-        selectTable(event);
-      });
-      tableInput.addEventListener("click", function(event) {
-        tableInput.value = "";
-      });
-      let addTableList = document.getElementById("easyIndexedDB-add-button");
-      addTableList.addEventListener("click", function(event) {
-        addTableListLi();
-      });
-      addTableListLi();
-      let dbOrigin = document.getElementById("easyIndexedDB-origin-url");
-      dbOrigin.innerHTML = location.hostname;
-      this.headertoolbar.querySelectorAll("span").forEach(function(item) {
-        item.style.cursor = "pointer";
-        item.style.marginRight = "4px";
-        item.addEventListener("click", function() {
-          panel.content.innerHTML = "You clicked the " + item.id + " icon!";
-        });
-      });
-    }
-  });
 }
 
 function createEasyIndexedDB() {
