@@ -1,19 +1,4 @@
 function startMain() {
-  let div = document.createElement("div");
-  div.innerHTML = '<div id="frame-element"><div id="table-element"></div></div>';
-  div.style.display = "none";
-  document.body.appendChild(div);
-  
-  let wm = new Ventus.WindowManager();
-
-  let window = wm.createWindow.fromQuery("#frame-element", {
-    title: "My App",
-    width: 330,
-    height: 400,
-    x: 670,
-    y: 60
-  });
-  window.open();
   
   var data = [
   ['', 'Ford', 'Tesla', 'Toyota', 'Honda'],
@@ -35,3 +20,168 @@ var hot = new Handsontable(container, {
   
   alert("OK!");
 }
+
+function showWindowFrame() {
+  var easyIndexedDB = jsPanel.create({
+    headerTitle: "Easy IndexedDB",
+    position: "center-top 0 80",
+    contentSize: "450 250",
+    content: "<div id="table-element"></div>",
+    headerLogo:
+      '<input type="text" id="db-input" list="db-list" placeholder="input DB name" autocomplete="off" style="margin-left:8px;font-size:10pt;"><datalist id="db-list"></datalist>',
+    headerToolbar:
+      '<input type="text" id="table-input" list="table-list" placeholder="input Table name" autocomplete="off" style="font-size:10pt;"><datalist id="table-list"></datalist>' +
+      '<div style="margin-left:8px;">' +
+      '<span id="bus"><i class="fas fa-file-import fa-lg"></i></span>' +
+      '<span id="train"><i class="fas fa-file-download fa-lg"></i></span>' +
+      "</div>",
+    callback: function(panel) {
+      Dexie.exists("easyIndexedDB").then(function(exists) {
+        let eDB = new Dexie("easyIndexedDB");
+        let tableData = {
+          dbList: "++id, name, version, table ",
+          settings: "name, value"
+        };
+        eDB.version(1).stores(tableData);
+        if (!exists) {
+          eDB.dbList.put({
+            name: "easyIndexedDB",
+            version: 1,
+            table: JSON.stringify(tableData)
+          });
+          eDB.settings.put({ name: "status", value: "new" });
+        }
+        eDB.dbList.toArray().then(function(data) {
+          let dataList = document.getElementById("db-list");
+          data.forEach(function(val) {
+            let option = document.createElement("option");
+            option.text = val.name;
+            option.value = val.name;
+            dataList.appendChild(option);
+          });
+        });
+      });
+      let dbInput = document.getElementById("db-input");
+      dbInput.addEventListener("change", function(event) {
+        selectDB(event);
+      });
+      dbInput.addEventListener("click", function(event) {
+        dbInput.value = "";
+      });
+      let tableInput = document.getElementById("table-input");
+      tableInput.addEventListener("change", function(event) {
+        selectTable(event);
+      });
+      tableInput.addEventListener("click", function(event) {
+        tableInput.value = "";
+      });
+      let addTableList = document.getElementById("easyIndexedDB-add-button");
+      addTableList.addEventListener("click", function(event) {
+        addTableListLi();
+      });
+      addTableListLi();
+      let dbOrigin = document.getElementById("easyIndexedDB-origin-url");
+      dbOrigin.innerHTML = location.hostname;
+      this.headertoolbar.querySelectorAll("span").forEach(function(item) {
+        item.style.cursor = "pointer";
+        item.style.marginRight = "4px";
+        item.addEventListener("click", function() {
+          panel.content.innerHTML = "You clicked the " + item.id + " icon!";
+        });
+      });
+    }
+  });
+}
+
+function createEasyIndexedDB() {
+  let eDB = new Dexie("easyIndexedDB");
+  eDB.version(1).stores({
+    dbList: "++id, name, version, table ",
+    settings: "name, value"
+  });
+  return eDB;
+}
+
+function addTableListLi(tableLiName, field) {
+  let span = document.createElement("span");
+  span.innerHTML = '<i class="fas fa-times"></i>';
+  span.class = "easyIndexedDB-tablelist-delete";
+  span.style = "margin-left: 8px;";
+  span.addEventListener("click", function(event) {
+    let remove = event.target.parentNode.parentNode;
+    remove.parentNode.removeChild(remove);
+  });
+  let tableOl = document.getElementById("easyIndexedDB-table-list");
+  let li = document.createElement("li");
+  let tableInput = tableLiName ? 'value="' + tableLiName + '" ' : "";
+  let fieldInput = field ? 'value="' + field + '" ' : "";
+  li.innerHTML =
+    '<input class="easyIndexedDB-table-name-li" style="width:80px;" placeholder="Table Name" ' +
+    tableInput +
+    '> : <input class="easyIndexedDV-field-li" ' +
+    fieldInput +
+    'placeholder="Comma separated field">';
+  li.appendChild(span);
+  tableOl.appendChild(li);
+}
+
+function selectDB(event) {
+  if (event.target.value) {
+    let eDB = createEasyIndexedDB();
+    eDB.dbList
+      .where("name")
+      .equalsIgnoreCase(event.target.value)
+      .toArray()
+      .then(function(arr) {
+        if (arr.length == 0) {
+          alert("aaa");
+        } else if (arr.length == 1) {
+          let tableList = document.getElementById("table-list");
+          let tableData = JSON.parse(arr[0]["table"]);
+          let tableInput = document.getElementById("table-input");
+          let dbNameInput = document.getElementById("easyIndexedDB-DB-name");
+          let dbversion = document.getElementById("easyIndexedDB-version");
+          let tableOl = document.getElementById("easyIndexedDB-table-list");
+          tableInput.value = "";
+          dbNameInput.value = event.target.value;
+          dbversion.innerHTML = arr[0]["version"];
+          while (tableList.firstChild) {
+            tableList.removeChild(tableList.firstChild);
+          }
+          while (tableOl.firstChild) {
+            tableOl.removeChild(tableOl.firstChild);
+          }
+          Object.keys(tableData).forEach(function(key) {
+            let option = document.createElement("option");
+            option.text = key;
+            option.value = key;
+            tableList.appendChild(option);
+            addTableListLi(key, tableData[key]);
+          });
+        }
+      });
+  }
+}
+
+function selectTable(event) {
+  let dbInput = document.getElementById("db-input").value;
+  if (event.target.value && dbInput) {
+    let eDB = createEasyIndexedDB();
+    eDB.dbList
+      .where("name")
+      .equalsIgnoreCase(dbInput)
+      .toArray()
+      .then(function(arr) {
+        if (arr.length == 0) {
+          alert("aaa");
+        } else if (arr.length == 1) {
+          let tableList = document.getElementById("table-list");
+          let tableData = JSON.parse(arr[0]["table"]);
+          if (Object.keys(tableData).includes(event.target.value)) {
+          } else {
+          }
+        }
+      });
+  }
+}
+
