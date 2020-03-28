@@ -1,10 +1,76 @@
 <style>
+  .db-toolbar-gnav {
+    left: 0;
+    top: 0;
+    position: relative;
+    display: flex;
+    height: 2rem;
+    margin: 0;
+    padding: 0;
+    width: 20%;
+  }
+  .db-toolbar-gnav > li {
+    /*親階層のみ幅を25%にする*/
+    left: 0;
+    top: 0;
+    width: 20%;
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+    position: relative;
+  }
+  /*全てのリスト・リンク共通*/
+  .db-toolbar-gnav li {
+    list-style: none;
+    position: relative;
+  }
+  .db-toolbar-gnav li a {
+    background: #001b34;
+    border-right: 1px solid #eee;
+    color: #fff;
+    display: block;
+    height: 2rem;
+    line-height: 2rem;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  /*子階層以降共通*/
+  .db-toolbar-gnav li li {
+    height: 0;
+    overflow: hidden;
+    transition: 0.5s;
+  }
+  .db-toolbar-gnav li li a {
+    border-top: 1px solid #eee;
+  }
+  .db-toolbar-gnav li:hover > ul > li {
+    width: 100px;
+    height: 2rem;
+    overflow: visible;
+  }
+
+  /*孫階層以降共通*/
+  .db-dropdown-gnav li ul li ul {
+    left: 100%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
   .dropdown {
     display: flex;
   }
 
   .menu {
-    width: 300px;
+    width: auto;
+    text-align: center;
+  }
+
+  .tab {
+    width: 33%;
     text-align: center;
   }
 
@@ -36,8 +102,41 @@
   }
 </style>
 
+<div>
+  <ul class="db-toolbar-gnav">
+    <li>
+      <a href="">Menu1</a>
+      <ul class="db-dropdown-gnav">
+        <li>
+          <a href="">Child1</a>
+          <ul>
+            <li>
+              <a href="">Grandchild1</a>
+              <ul>
+                <li><a href="">Greatgrandchild1</a></li>
+                <li><a href="">Greatgrandchild2</a></li>
+                <li><a href="">Greatgrandchild3</a></li>
+                <li><a href="">Greatgrandchild4</a></li>
+                <li><a href="">Greatgrandchild5</a></li>
+              </ul>
+            </li>
+            <li><a href="">Grandchild2</a></li>
+            <li><a href="">Grandchild3</a></li>
+            <li><a href="">Grandchild4</a></li>
+            <li><a href="">Grandchild5</a></li>
+          </ul>
+        </li>
+        <li><a href="">Child2</a></li>
+        <li><a href="">Child3</a></li>
+        <li><a href="">Child4</a></li>
+        <li><a href="">Child5</a></li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
 <div class="dropdown">
-  <div class="menu">
+  <div class="tab">
     <div class="menu-title">Menu1</div>
     <div class="sub-menu">
       <ul>
@@ -48,7 +147,7 @@
     </div>
   </div>
 
-  <div class="menu">
+  <div class="tab">
     <div class="menu-title">Menu2</div>
     <div class="sub-menu">
       <ul>
@@ -58,7 +157,7 @@
       </ul>
     </div>
   </div>
-  <div class="menu">
+  <div class="tab">
     <div class="menu-title">Menu3</div>
     <div class="sub-menu">
       <ul>
@@ -69,3 +168,42 @@
     </div>
   </div>
 </div>
+
+'
+<div
+  id="easyIndexedDB-contents"
+  style="margin:4px;pedding:4px;font-size: small;"
+>
+  <style>
+    #easyIndexedDB-contents p {
+      margin: 5px;
+    }
+  </style>
+  <ul id="easyIndexedDB-pages" style="list-style:">
+    <li id="easyIndexedDb-edit-form">
+      <h3>Easy IndexedDB</h3>
+      <p>
+        DB Name :
+        <input
+          id="easyIndexedDB-DB-name"
+          type="file"
+          style="margin:1px;pedding:1px;"
+        />
+      </p>
+      <p>Version : <span id="easyIndexedDB-version"></span></p>
+      <p>Origin url : <span id="easyIndexedDB-origin-url"></span></p>
+      <p>
+        <button id="easyIndexedDB-add-button" type="button">Add Table</button>
+        Table name : field (Comma separated)
+      </p>
+      <ol
+        id="easyIndexedDB-table-list"
+        style="padding-left: 20px;margin-top: 8px;"
+      ></ol>
+      <p style="margin-top: 8px">
+        <button id="easyIndexedDB-apply-button" type="button">Apply</button>
+      </p>
+    </li>
+  </ul>
+</div>
+'; }
