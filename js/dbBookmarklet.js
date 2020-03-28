@@ -1,28 +1,30 @@
 async function startMain() {
-  let url = 'https://script.google.com/macros/s/AKfycbxKmy8wnZSKN2i-VlcVwcUutTu_4bvHdZ7zU7yvbCN0PFyONN4/exec'
- 
+  
+  let obj = {pass:"test",callback:"jsonp_callback",text:"ヤフー"}
+// alert(objToParameter(obj));
 
-loadJS( url+'?callback=jsonp_callback');
+loadJsonp( url,obj);
+  let obj2 = {pass:"test",callback:"jsonp_callback2"};
 
-loadJS( url+'?callback=jsonp_callback2');
+loadJsonp( url,obj2);
   
 //  showWindowFrame();
   
 //  alert("OK!");
 }
 
- function loadJS(src){
+ function loadJsonp(src,param){
   var script = document.createElement('script');
-  script.src = src;
+  script.src = src + objToParameter(param);
   document.body.appendChild(script);
 }
 
 var jsonp_callback = function(data){
-  alert(data)
+  alert(data.message)
 };
 
 var jsonp_callback2 = function(data){
-  alert(data)
+  alert(data.message)
 };
 
 function showWindowFrame() {
@@ -54,4 +56,15 @@ var hot = new Handsontable(container, {
   dropdownMenu: true,
   licenseKey: "non-commercial-and-evaluation"
 });
+}
+
+function objToParameter(obj){
+  if(obj instanceof Object && !(obj instanceof Array)){
+    var arr = [];
+    Object.keys(obj).forEach(function (key){
+      arr.push(key+"="+obj[key]);
+    })
+    return "?"+arr.join("&");
+  }
+  return "";
 }

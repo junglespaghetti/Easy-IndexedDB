@@ -1,4 +1,7 @@
 javascript: (function(f, urls, cssUlrs, i, s, c) {
+   gsUrl =
+    "https://script.google.com/macros/s/AKfycbxKmy8wnZSKN2i-VlcVwcUutTu_4bvHdZ7zU7yvbCN0PFyONN4/exec";
+  scriptFanc = { pass: "test", callback: "jsonp_callback", text: "ヤフー" };
   urls = [
     "https://cdnjs.cloudflare.com/ajax/libs/alasql/0.5.5/alasql.min.js",
     "https://cdn.jsdelivr.net/npm/jspanel4@4.9.4/dist/jspanel.js",
@@ -29,5 +32,5 @@ javascript: (function(f, urls, cssUlrs, i, s, c) {
     document.body.appendChild(s);
   }
 })(function() {
-  startMain();
+  loadJsonp(gsUrl, scriptFanc);
 });
